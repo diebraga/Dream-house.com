@@ -2,8 +2,31 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
+class UserAccountManager(BaseUserManager):
+    """ Model class for user superuser creation """
+    def create_user(self, email, name, password=None):
+        if not email:
+            raise ValueError('Please input an valid email.')
+        
+        email = self.normalize_email(email)
+        user = self.model(email=email, name=name)
+        user.set_password(password)
+        user.save()
+
+        return user
+    
+    def create_superuser(self, email, name, password):
+        user = self.create_user(email, name, password)
+
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+
+        return user
+
+
 class UserAccount(AbstractBaseUser, PermissionsMixin):
-    """ Model class for costume user creation """
+    """ Model class for custom user creation """
     email = models.EmailField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
@@ -23,27 +46,4 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
-class UserAccountManager(BaseUserManager):
-    """ Model class for user superuser creation """
-    def create_user(self, email, name, password=None):
-        if not email:
-            raise ValueError('Please input an valid email.')
-        
-        email = self.normalize_email(email)
-        user = self.model(email=email, name=name)
-
-        user.set_password(password)
-        user.save()
-
-        return user
-    
-    def create_superuser(self, email, name, password):
-        user = self.create_user(email, name, password)
-
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
-
-        return user
 
