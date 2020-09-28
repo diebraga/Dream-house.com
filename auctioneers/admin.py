@@ -1,3 +1,11 @@
 from django.contrib import admin
+from .models import Auctioneer
 
-# Register your models here.
+class AuctioneerAdmin(admin.ModelAdmin):
+    """ Class to be viewed in the admin panel """
+    list_display = ('id', 'name', 'email', 'date_hired')
+    list_display_links = ('id', 'name')
+    search_fields = ('name', )
+    list_per_page = 25
+
+admin.site.register(Auctioneer, AuctioneerAdmin)
