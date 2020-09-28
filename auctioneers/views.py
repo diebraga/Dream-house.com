@@ -17,7 +17,7 @@ class AuctioneerView(RetrieveAPIView):
     serializer_class = AuctioneerSerializer
 
 class TopSellerView(ListAPIView):
-    """ View topseller auctioneers without auth """
+    """ View topseller auctioneers """
     permission_classes = (permissions.AllowAny, )
     queryset = Auctioneer.objects.filter(top_seller=True)
     serializer_class = AuctioneerSerializer
